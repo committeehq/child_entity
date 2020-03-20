@@ -1,0 +1,6 @@
+name: 'Child Entity'
+type: module
+description: 'Entity Trait to create sub entities for developers'
+core: 8.x
+package: 'Entity'
+
