@@ -12,10 +12,10 @@ interface ChildEntityInterface extends EntityInterface {
   /**
    * Returns the entity parent's entity.
    *
-   * @return \Drupal\user\UserInterface
+   * @return \Drupal\Core\Entity\EntityInterface
    *   The parent entity.
    */
-  public function getParent();
+  public function getParentEntity();
 
   /**
    * Sets the entity parent's entity.
@@ -25,7 +25,7 @@ interface ChildEntityInterface extends EntityInterface {
    *
    * @return $this
    */
-  public function setParent(EntityInterface $parent);
+  public function setParentEntity(EntityInterface $parent);
 
   /**
    * Returns the entity parent's ID.

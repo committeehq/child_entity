@@ -17,7 +17,7 @@ abstract class ChildContentEntityForm extends ContentEntityForm {
    * @inheritDoc
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = null) {
-    $this->setParent($this->getParentEntityFromRoute());
+    $this->setParentEntity($this->getParentEntityFromRoute());
     return parent::buildForm($form, $form_state);
   }
 
@@ -27,8 +27,8 @@ abstract class ChildContentEntityForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\child_entity\Entity\ChildEntityInterface $entity */
     $entity = $this->entity;
-    $entity->setParent($this->getParentEntityFromRoute());
-    $this->setParent($this->getParentEntityFromRoute());
+    $entity->setParentEntity($this->getParentEntityFromRoute());
+    $this->setParentEntity($this->getParentEntityFromRoute());
     return parent::save($form, $form_state);
   }
 
@@ -45,7 +45,7 @@ abstract class ChildContentEntityForm extends ContentEntityForm {
    *
    * @return $this
    */
-  protected function setParent(EntityInterface $entity){
+  protected function setParentEntity(EntityInterface $entity){
     $this->parentEntity = $entity;
     return $this;
   }

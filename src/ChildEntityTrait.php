@@ -123,7 +123,7 @@ trait ChildEntityTrait {
   /**
    * {@inheritdoc}
    */
-  public function getParent() {
+  public function getParentEntity() {
     $key = $this->getEntityType()->getKey('parent');
     return $this->get($key)->entity;
   }
@@ -131,7 +131,7 @@ trait ChildEntityTrait {
   /**
    * {@inheritdoc}
    */
-  public function setParent(EntityInterface $parent) {
+  public function setParentEntity(EntityInterface $parent) {
     $key = $this->getEntityType()->getKey('parent');
     $this->set($key, $parent);
 
