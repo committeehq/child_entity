@@ -1,0 +1,21 @@
+{
+    "name": "drupal/child_entity",
+    "description": "A Trait to give and entity a parent",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "David Kitchen",
+            "email": "david@committeehq.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/core": "^8.8.4"
+    }
+}
