@@ -14,8 +14,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 trait ChildEntityTrait {
 
-  private $query = NULL;
-
   /**
    * Returns an array of base field definitions for publishing status.
    *
@@ -42,7 +40,7 @@ trait ChildEntityTrait {
       $entity_type->getKey('parent') => BaseFieldDefinition::create('entity_reference')
         ->setLabel(new TranslatableMarkup('Parent ID'))
         ->setSetting('target_type', $entity_type->getKey('parent'))
-        ->setTranslatable($entity_type->isTranslatable())
+        ->setTranslatable(FALSE)
         ->setRequired(TRUE)
         ->setDisplayOptions('view', [
           'type' => 'entity_reference_label',
@@ -55,53 +53,83 @@ trait ChildEntityTrait {
   }
 
   /**
-   * @return string parent entity key.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *
+   * @return bool
    */
-  public function getParentColumn() {
-    return $this->query()->getParentColumn();
+  private function isChildEntity(EntityTypeInterface $entity_type) {
+    $original_class = $entity_type->getOriginalClass();
+    if (in_array(ChildEntityTrait::class, class_uses($original_class))) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
-   * @return string route key of the parent entity in sub entity urls
+   * @param $key string
    */
-  public function getParentKeyInRoute() {
-    return $this->query()->getParentKeyInRoute();
+  private function reportMissingKey($key) {
+    throw new \InvalidArgumentException(sprintf('"%s" key must be set in "entity_keys" of class "%s"', $key, get_class($this)));
   }
 
   /**
-   * @return \Drupal\child_entity\ChildContentEntityTypeQuery
+   * @inheritDoc
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  private function query() {
-    if ($this->query === NULL) {
-      $this->query = new ChildContentEntityTypeQuery($this->getEntityType());
+  protected function urlRouteParameters($rel) {
+    $uri_route_parameters = parent::urlRouteParameters($rel) + [
+        $this->getParentEntityTypeId() => $this->getParentEntityTypeId(),
+      ];
+
+    if ($this->isParentAnotherChildEntity()) {
+      $uri_route_parameters = $this->buildParentParams($uri_route_parameters, $this->getParentEntity());
     }
 
-    return $this->query;
+    return $uri_route_parameters;
+  }
+
+  /**
+   * @param array $uri_route_parameters
+   * @param \Drupal\child_entity\Entity\ChildEntityInterface $parent_entity
+   *
+   * @return array
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function buildParentParams(array $uri_route_parameters, ChildEntityInterface $parent_entity) {
+
+    $uri_route_parameters[$parent_entity->getParentEntityTypeId()] = $parent_entity->getParentEntityTypeId();
+
+    if ($parent_entity->isParentAnotherChildEntity()) {
+      $uri_route_parameters = $this->buildParentParams($uri_route_parameters, $this->getParentEntity());
+    }
+
+    return $uri_route_parameters;
   }
 
   /**
    * @inheritDoc
    */
-  protected function urlRouteParameters($rel) {
-    $params = parent::urlRouteParameters($rel) + [
-        $this->getParentKeyInRoute() => $this->getParentEntity()
-          ->id(),
-      ];
-    $params = $this->buildParentParams($params, $this, $this->query());
-    return $params;
-  }
-
-  public function buildParentParams(array $parameters, ChildEntityInterface $entity, ChildContentEntityTypeQuery $query) {
-    if ($query->isParentAnotherChildEntity()) {
-      $parentQuery = new ChildContentEntityTypeQuery($query->getParentEntityType());
-      $parentQuery->getParentKeyInRoute();
-      $parameters[$parentQuery->getParentKeyInRoute()] = $entity->getParentEntity()->id();
-      $parameters = $this->buildParentParams($parameters, $entity->getParentEntity(), $parentQuery);
+  public function getParentEntityTypeId() {
+    if ($this->getEntityType()->hasKey('parent')) {
+      return $this->getEntityType()->getKey('parent');
     }
-
-    return $parameters;
+    $this->reportMissingKey('parent');
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getParentEntityType() {
+    return \Drupal::entityTypeManager()
+      ->getDefinition($this->getParentEntityTypeId());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function isParentAnotherChildEntity() {
+    return $this->isChildEntity($this->getParentEntityType());
+  }
 
   /**
    * {@inheritdoc}

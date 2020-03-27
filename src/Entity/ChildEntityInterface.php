@@ -10,6 +10,28 @@ use Drupal\Core\Entity\EntityInterface;
 interface ChildEntityInterface extends EntityInterface {
 
   /**
+   * Returns the parent entity type name.
+   *
+   * @return string
+   *   The parent Entity Type machine name.
+   */
+  public function getParentEntityTypeId();
+
+  /**
+   * Returns the parent entity type.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface|null
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getParentEntityType();
+
+  /**
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function isParentAnotherChildEntity();
+
+  /**
    * Returns the entity parent's entity.
    *
    * @return \Drupal\Core\Entity\EntityInterface
