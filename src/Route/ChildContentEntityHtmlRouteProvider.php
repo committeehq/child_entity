@@ -24,7 +24,7 @@ class ChildContentEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
   public function getRoutes(EntityTypeInterface $entity_type) {
     $collection = parent::getRoutes($entity_type);
 
-    if (!is_subclass_of($entity_type->getClass(), ChildEntityInterface::class)) {
+    if (!$entity_type->entityClassImplements(ChildEntityInterface::class)) {
       throw new UnsupportedEntityTypeDefinitionException(
         'The entity type ' . $entity_type->id() . ' does not implement \Drupal\child_entity\Entity\ChildEntityInterface.');
     }

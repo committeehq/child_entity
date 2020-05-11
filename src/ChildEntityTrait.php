@@ -28,7 +28,7 @@ trait ChildEntityTrait {
    *   or if it does not have a "published" entity key.
    */
   public static function childBaseFieldDefinitions(EntityTypeInterface $entity_type) {
-    if (!is_subclass_of($entity_type->getClass(), ChildEntityInterface::class)) {
+    if (!$entity_type->entityClassImplements(ChildEntityInterface::class)) {
       throw new UnsupportedEntityTypeDefinitionException(
         'The entity type ' . $entity_type->id() . ' does not implement \Drupal\child_entity\Entity\ChildEntityInterface.');
     }
@@ -78,7 +78,7 @@ trait ChildEntityTrait {
    */
   protected function urlRouteParameters($rel) {
     $uri_route_parameters = parent::urlRouteParameters($rel) + [
-        $this->getParentEntityTypeId() => $this->getParentEntityTypeId(),
+        $this->getParentEntityTypeId() => $this->getParentId(),
       ];
 
     if ($this->isParentAnotherChildEntity()) {
@@ -97,7 +97,7 @@ trait ChildEntityTrait {
    */
   public function buildParentParams(array $uri_route_parameters, ChildEntityInterface $parent_entity) {
 
-    $uri_route_parameters[$parent_entity->getParentEntityTypeId()] = $parent_entity->getParentEntityTypeId();
+    $uri_route_parameters[$parent_entity->getParentEntityTypeId()] = $parent_entity->getParentId();
 
     if ($parent_entity->isParentAnotherChildEntity()) {
       $uri_route_parameters = $this->buildParentParams($uri_route_parameters, $this->getParentEntity());
