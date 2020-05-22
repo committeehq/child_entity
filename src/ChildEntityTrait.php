@@ -41,7 +41,7 @@ trait ChildEntityTrait {
         ->setLabel(new TranslatableMarkup('Parent ID'))
         ->setSetting('target_type', $entity_type->getKey('parent'))
         ->setTranslatable(FALSE)
-        ->setRequired(TRUE)
+        ->setReadOnly(TRUE)
         ->setDisplayOptions('view', [
           'type' => 'entity_reference_label',
           'label' => 'inline',
