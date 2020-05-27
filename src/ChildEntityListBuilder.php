@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a class to build a listing of Committee meeting entities.
  *
- * @ingroup committee_meeting
+ * @ingroup child_entity
  */
 class ChildEntityListBuilder extends EntityListBuilder {
 

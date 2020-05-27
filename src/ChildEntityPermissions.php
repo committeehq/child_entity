@@ -15,9 +15,9 @@ use Drupal\committee\Entity\Committee;
 
 
 /**
- * Provides dynamic permissions for Committee of different types.
+ * Provides dynamic permissions for Child Entity of different types.
  *
- * @ingroup committee
+ * @ingroup child_entity
  *
  */
 class ChildEntityPermissions{
