@@ -43,15 +43,15 @@ trait ChildEntityRouteContextTrait {
    * on the group add form, it will return a new group entity with the group
    * type set.
    *
-   * @param ChildEntityInterface $child_entity
+   * @param string $parent_entity_type
    * @return EntityInterface|null
    *   The parent entity if one could be found, NULL otherwise.
    */
-  public function getParentEntityFromRoute(ChildEntityInterface $child_entity) {
+  public function getParentEntityFromRoute($parent_entity_type) {
     $route_match = $this->getCurrentRouteMatch();
 
     // See if the route has a group parameter and try to retrieve it.
-    if ($parent_entity = $route_match->getParameter($child_entity->getParentEntityTypeId())) {
+    if ($parent_entity = $route_match->getParameter($parent_entity_type)) {
       return $parent_entity;
     }
 

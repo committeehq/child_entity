@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\child_entity\Context\ChildEntityRouteContextTrait;
 
-abstract class ChildContentEntityForm extends ContentEntityForm {
+class ChildContentEntityForm extends ContentEntityForm {
 
   use ChildEntityRouteContextTrait;
 
@@ -33,7 +33,7 @@ abstract class ChildContentEntityForm extends ContentEntityForm {
    */
   protected function getParentEntity() {
     if ($this->entity->isNew()) {
-      return $this->getParentEntityFromRoute($this->entity);
+      return $this->getParentEntityFromRoute($this->entity->getParentEntityTypeId());
     }
     else {
       return $this->entity->getParentEntity();
